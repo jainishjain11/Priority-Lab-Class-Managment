@@ -1,0 +1,18 @@
+packages:
+  "recharts": "Analytics charts and data visualization"
+  "framer-motion": "Smooth page transitions and micro-interactions"
+  "date-fns": "Date formatting for schedule grid and audit logs"
+  "react-hook-form": "Form state management"
+  "@hookform/resolvers": "Zod validation for forms"
+  "lucide-react": "High-quality vector icons"
+  "clsx": "Utility for constructing className strings conditionally"
+  "tailwind-merge": "Utility function to efficiently merge Tailwind CSS classes"
+
+images:
+  - path: "artifacts/campusslot/public/images/login-bg.png"
+    description: "Abstract modern university campus tech background with deep blue and purple gradients, minimal geometric shapes, high quality, dark and moody but professional and clean"
+    aspect_ratio: "16:9"
+
+notes:
+  - Assumes authentication token is managed via localStorage and AuthContext for demo purposes
+  - Uses @workspace/api-client-react for generated TanStack Query hooks

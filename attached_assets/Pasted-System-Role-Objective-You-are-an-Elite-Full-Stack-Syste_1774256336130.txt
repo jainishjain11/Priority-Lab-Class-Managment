@@ -1,0 +1,97 @@
+System Role & Objective:
+You are an Elite Full-Stack Systems Architect. Your objective is to build the complete "Priority-Based Lab Management System" (PLMS) in a single, comprehensive generation. You must not use placeholders (e.g., // TODO: implement logic). You must generate fully functioning, production-ready code.
+
+Context & Core Business Logic:
+This system handles university lab scheduling conflicts during placement seasons. It relies on a strict 3-tier priority hierarchy:
+
+P1: Placement Drives (Highest)
+
+P2: Lab Exams (Medium)
+
+P3: Regular Classes (Lowest)
+If a higher-priority event is booked in an occupied slot, the system MUST automatically displace the lower-priority event, log the override in an audit table, and trigger a notification/reschedule workflow for the displaced user.
+
+Provided Assets & Strict File Constraints:
+I have provided two exact frontend components: ScheduleGrid.tsx and SmartSuggest.tsx. You must integrate these exactly as they are designed. Do not rewrite their core presentation logic.
+
+Based on these files, you MUST strictly adhere to these TypeScript interfaces in your types.ts and Prisma Schema:
+
+Priority: 'P1' | 'P2' | 'P3'
+
+TimeSlot: { day: string; startTime: string; endTime: string }
+
+Lab: { id: string; name: string; building: string; floor: number; capacity: number; hasI7Processors: boolean; hasGraphicsCards: boolean; isUnderMaintenance: boolean }
+
+Booking: { id: string; subject: string; faculty: string; labName: string; timeSlot: TimeSlot; capacity: number; priority: Priority; displacedBooking?: boolean }
+
+Tech Stack:
+
+Frontend: Next.js (App Router), Tailwind CSS, lucide-react for icons, Radix UI (for the Dialogs, Tooltips, Badges seen in the provided files).
+
+Backend: Next.js Server Actions / API Routes.
+
+Database: PostgreSQL mapped with Prisma ORM (Essential for database transactions during complex conflict overrides).
+
+State/Real-time: React Context or Zustand; simulate real-time calendar updates.
+
+⚙️ Module Implementation Requirements
+Module 1: Role-Based Dashboards & Authentication (US 11)
+
+Implement a mocked AuthContext supporting 5 roles: PlacementCoordinator, Faculty, LabAssistant, Admin, Student.
+
+Route users to customized views:
+
+Admin: Analytics dashboard showing utilization heatmaps and P1 vs P3 charts.
+
+Placement: Bulk booking interface and override audit logs.
+
+Faculty: Personal schedule and displacement alerts.
+
+Lab Assistant: Global calendar and maintenance toggles.
+
+Student: Read-only mobile-responsive grid.
+
+Module 2: The Priority Resolution Engine (US 1, 3, 13)
+
+Write a dedicated backend service: ConflictResolver.
+
+Single & Bulk Booking: Coordinators can book single or multiple consecutive slots.
+
+Conflict Logic: If a P1 booking targets a slot held by a P3, the system must drop the P3 booking, create the P1 booking, flag the P3 booking as displaced, and write to the AuditLog table.
+
+Rejection: If a P1 conflicts with an existing P1, reject the new request with a clear error.
+
+Module 3: Faculty Rescheduling (US 2, 4, 10)
+
+Alerts: When displaced, trigger a dashboard alert for the faculty.
+
+Smart Suggestions: Feed the provided SmartSuggest.tsx component. Write a SuggestionEngine that queries available labs for the same week, matching the displaced class's capacity and tech requirements (hasI7Processors, hasGraphicsCards). Score the matches out of 100%.
+
+Module 4: Calendar Sync & Lab Operations (US 5, 7, 12)
+
+Use the provided ScheduleGrid.tsx as the master view for Lab Assistants and Students.
+
+Implement a "Maintenance Flag" (US 12) for Lab Assistants. When toggled, the lab is blocked from all bookings.
+
+Module 5: Analytics & Bulk Import (US 6, 8, 9)
+
+CSV Import: Create a parser for Faculty to upload weekly recurring schedules.
+
+Audit Trail: Create an AuditLog UI for Placement Coordinators displaying: "Overrode Regular Class on [Date]".
+
+🛠️ Step-by-Step Execution Plan
+Project Initialization & Types: Set up the Next.js structure. Create types.ts first, strictly mapping to the interfaces required by ScheduleGrid and SmartSuggest.
+
+Prisma Schema: Define User, Lab, Booking (with foreign keys for displacement), and AuditLog models.
+
+UI Foundation: Create the layout components (Sidebar, Topnav) and integrate the required Radix UI primitives (Card, Badge, Dialog, Tooltip, Tabs).
+
+Insert Provided Files: Implement ScheduleGrid.tsx and SmartSuggest.tsx exactly as intended.
+
+Core Business Logic: Write the server actions for createBooking (containing the conflict resolution transaction) and findAlternativeSlots (the suggestion engine).
+
+Dashboards: Build the role-specific pages consuming these server actions.
+
+Final Polish: Ensure all Tailwind classes match, interactions are smooth, and the system can successfully complete a full flow: P3 Faculty Books -> P1 Placement Overrides -> Faculty Gets Alert -> Faculty Uses SmartSuggest -> Schedule Updates.
+
+Final Command: Generate the entire codebase now. Ensure zero missing imports, complete functional logic for the priority engine, and pixel-perfect adherence to the provided UI structures.
