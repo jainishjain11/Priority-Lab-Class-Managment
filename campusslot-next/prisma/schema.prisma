@@ -1,0 +1,103 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Lab {
+  id                 String    @id
+  name               String
+  building           String
+  floor              Int
+  capacity           Int
+  hasI7Processors    Boolean   @default(false) @map("has_i7_processors")
+  hasGraphicsCards   Boolean   @default(false) @map("has_graphics_cards")
+  isUnderMaintenance Boolean   @default(false) @map("is_under_maintenance")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  bookings           Booking[]
+
+  @@map("labs")
+}
+
+model User {
+  id                 String   @id
+  name               String
+  email              String   @unique
+  password           String
+  role               String
+  department         String
+  registrationNumber String?  @map("registration_number")
+  createdAt          DateTime @default(now()) @map("created_at")
+
+  @@map("users")
+}
+
+model Booking {
+  id               String     @id
+  subject          String
+  faculty          String
+  labId            String     @map("lab_id")
+  labName          String     @map("lab_name")
+  day              String
+  startTime        String     @map("start_time")
+  endTime          String     @map("end_time")
+  capacity         Int
+  priority         String
+  isDisplaced      Boolean    @default(false) @map("is_displaced")
+  requiresI7       Boolean    @default(false) @map("requires_i7")
+  requiresGraphics Boolean    @default(false) @map("requires_graphics")
+  createdAt        DateTime   @default(now()) @map("created_at")
+  lab              Lab        @relation(fields: [labId], references: [id])
+  alerts           Alert[]
+  winningConflicts Conflict[] @relation("WinningBooking")
+  lostConflicts    Conflict[] @relation("DisplacedBooking")
+
+  @@map("bookings")
+}
+
+model Alert {
+  id                String   @id
+  bookingId         String   @map("booking_id")
+  faculty           String
+  subject           String
+  originalLab       String   @map("original_lab")
+  originalDay       String   @map("original_day")
+  originalStartTime String   @map("original_start_time")
+  originalEndTime   String   @map("original_end_time")
+  reason            String
+  isRead            Boolean  @default(false) @map("is_read")
+  createdAt         DateTime @default(now()) @map("created_at")
+  booking           Booking  @relation(fields: [bookingId], references: [id])
+
+  @@map("alerts")
+}
+
+model AuditLog {
+  id         String   @id
+  action     String
+  description String
+  actor      String
+  subject    String
+  priority   String
+  labName    String?  @map("lab_name")
+  actionType String   @default("system") @map("action_type")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@map("audit_log")
+}
+
+model Conflict {
+  id                String   @id
+  winningBookingId  String   @map("winning_booking_id")
+  displacedBookingId String  @map("displaced_booking_id")
+  resolution        String
+  resolvedAt        DateTime @default(now()) @map("resolved_at")
+  winningBooking    Booking  @relation("WinningBooking", fields: [winningBookingId], references: [id])
+  displacedBooking  Booking  @relation("DisplacedBooking", fields: [displacedBookingId], references: [id])
+
+  @@map("conflicts")
+}
