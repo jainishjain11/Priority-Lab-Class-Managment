@@ -1,0 +1,4 @@
+src/app/api/auth/login/route.ts(25,7): error TS2353: Object literal may only specify known properties, and 'department' does not exist in type 'JwtPayload'.
+src/app/api/auth/register/route.ts(33,7): error TS2353: Object literal may only specify known properties, and 'department' does not exist in type 'JwtPayload'.
+src/components/SmartSuggestDialog.tsx(4,31): error TS2305: Module '"@/types"' has no exported member 'SuggestionQuery'.
+src/lib/auth.ts(55,25): error TS2339: Property 'department' does not exist on type 'JwtPayload'.

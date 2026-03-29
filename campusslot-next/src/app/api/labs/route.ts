@@ -1,12 +1,13 @@
 // src/app/api/labs/route.ts
+import { NextRequest } from "next/server";
 import { ok, err } from "@/lib/apiResponse";
 import { prisma } from "@/lib/prisma";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
     const labs = await prisma.lab.findMany({ orderBy: { name: "asc" } });
     return ok(
-      labs.map((l) => ({
+      labs.map((l: any) => ({
         id: l.id,
         name: l.name,
         building: l.building,

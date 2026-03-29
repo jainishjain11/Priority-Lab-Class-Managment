@@ -155,6 +155,7 @@ export interface JwtPayload {
   email: string;
   role: UserRole;
   name: string;
+  department: string;
 }
 
 // Role-based access control

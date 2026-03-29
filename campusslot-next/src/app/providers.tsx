@@ -1,7 +1,7 @@
 "use client";
 // src/app/providers.tsx
+import React, { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useState } from "react";
 import { AuthProvider } from "@/context/auth-context";
 
 export function Providers({ children }: { children: React.ReactNode }) {
